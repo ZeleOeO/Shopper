@@ -3,6 +3,8 @@ package com.zele.shopper.api.controller;
 import com.zele.shopper.api.dto.ShopOwnerDto;
 import com.zele.shopper.exceptions.ShopOwnerNotFoundException;
 import com.zele.shopper.repository.ShopOwnerRepository;
+import com.zele.shopper.service.shopowner.ShopOwnerMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +16,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/shopowner")
+@AllArgsConstructor
 public class ShopOwnerController {
     private final ShopOwnerRepository ownerRepository;
-
-    @Autowired
-    public ShopOwnerController(ShopOwnerRepository ownerRepository) {
-        this.ownerRepository = ownerRepository;
-    }
+    private final ShopOwnerMapper ownerMapper;
 
     @GetMapping("/all")
     public List<ShopOwnerDto> getAllShopOwners() {
         return ownerRepository.findAll()
                 .stream()
-                .map(user -> new ShopOwnerDto(user.getUsername(), user.getEmail(), user.getProduct()))
+                .map(ownerMapper::toDto)
                 .toList();
     }
 
@@ -34,8 +33,7 @@ public class ShopOwnerController {
     public ResponseEntity<ShopOwnerDto> getShopOwnerById(@PathVariable Long id ) {
         var user = ownerRepository.findById(id).orElseThrow(() -> new ShopOwnerNotFoundException("ShopOwner not found"));
         if(user == null) {ResponseEntity.notFound().build();}
-        var userDto = new ShopOwnerDto(user.getUsername(), user.getEmail(), user.getProduct());
-        return ResponseEntity.ok(userDto);
+        return ResponseEntity.ok(ownerMapper.toDto(user));
     }
 
 }

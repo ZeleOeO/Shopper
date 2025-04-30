@@ -1,12 +1,10 @@
 package com.zele.shopper.api.controller;
 
 import com.zele.shopper.api.dto.ProductDto;
-import com.zele.shopper.entity.Product;
 import com.zele.shopper.exceptions.ProductNotFoundException;
-import com.zele.shopper.mappers.ProductMapper;
+import com.zele.shopper.service.product.ProductMapper;
 import com.zele.shopper.repository.ProductRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
